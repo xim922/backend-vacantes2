@@ -14,9 +14,9 @@ const db = mysql.createConnection({
     user,
     password,
     database,
-    ssl:{
+    /*ssl:{
         rejectUnauthorized: false
-    }
+    }*/
 })
 
 const PORT = process.env.PORT || 3001
