@@ -3,10 +3,10 @@ const app = express();
 const cors = require('cors');
 const mysql = require('mysql');
 
-const database= "agenci13_appsreact"
-const user= "agenci13_proyecto2"
-const host= "51.161.116.202"
-const password= "cu$s0.pr0y3c702.2028"
+const database= "vacantes_react"
+const user= "root"
+const host= "localhost"
+const password= ""
 
 
 const db = mysql.createConnection({
@@ -14,23 +14,7 @@ const db = mysql.createConnection({
     user,
     password,
     database,
-    /*ssl:{
-        rejectUnauthorized: false
-    }*/
 })
-
-var pool  = mysql.createPool({
-    connectionLimit : 10,
-    host,
-    user,
-    password,
-    database,
-    /*ssl:{
-        rejectUnauthorized: false
-    }*/
-  });
-  
-  
 
 const PORT = process.env.PORT || 3001
 
@@ -51,33 +35,23 @@ app.post('/company',(req,res)=>{
     const email = req.body.email
     const password = req.body.password
     const logo = req.body.logo
-    pool.getConnection(function(err, connection) {
-        connection.query( `INSERT INTO company (company,username,email,password,logo) VALUES(?,?,?,md5(?),?)`,[company,username,email,password,logo],
-        (err, rows)=> {
-            if (err) {
-                res.send({
-                    status: 400,
-                    message: err
-                })
-            }else{
-                res.status(201)
-                .send({
-                    status: 201,
-                    message: 'Empresa creada con éxito',
-                    data: result
-                })
-            }
-    
-          console.log(pool._freeConnections.indexOf(connection)); // -1
-    
-          connection.release();
-    
-          console.log(pool._freeConnections.indexOf(connection)); // 0
-    
-       });
-    });
-    
-    
+    db.query(`INSERT INTO company (company,username,email,password,logo) VALUES(?,?,?,md5(?),?)`,[company,username,email,password,logo],
+    (err, result) => {
+        if (err) {
+            res.send({
+                status: 400,
+                message: err
+            })
+        }else{
+            res.status(201)
+            .send({
+                status: 201,
+                message: 'Empresa creada con éxito',
+                data: result
+            })
+        }
+    }
+    );
 
 })
 
