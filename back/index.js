@@ -4,9 +4,9 @@ const cors = require('cors');
 const mysql = require('mysql');
 
 const database= "vacantes_react"
-const user= "p6vrd700m5jk4t8bjf5h"
+const user= "3zy7147z6bedujxoj5zn"
 const host= "aws.connect.psdb.cloud"
-const password= "pscale_pw_puIcnZdqfs1GiyOvZIzVJFA8MGyFjaHmFWonaN2mXvs"
+const password= "pscale_pw_RUgus5E9PX62jiFWbRoJM3NUWVaEUQcpy64mRc52Rhy"
 
 
 const db = mysql.createConnection({
