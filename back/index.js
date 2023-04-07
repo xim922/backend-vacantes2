@@ -19,6 +19,19 @@ const db = mysql.createConnection({
     }*/
 })
 
+var pool  = mysql.createPool({
+    connectionLimit : 10,
+    host,
+    user,
+    password,
+    database,
+    /*ssl:{
+        rejectUnauthorized: false
+    }*/
+  });
+  
+  
+
 const PORT = process.env.PORT || 3001
 
 app.use(cors());
@@ -38,23 +51,33 @@ app.post('/company',(req,res)=>{
     const email = req.body.email
     const password = req.body.password
     const logo = req.body.logo
-    db.query(`INSERT INTO company (company,username,email,password,logo) VALUES(?,?,?,md5(?),?)`,[company,username,email,password,logo],
-    (err, result) => {
-        if (err) {
-            res.send({
-                status: 400,
-                message: err
-            })
-        }else{
-            res.status(201)
-            .send({
-                status: 201,
-                message: 'Empresa creada con éxito',
-                data: result
-            })
-        }
-    }
-    );
+    pool.getConnection(function(err, connection) {
+        connection.query( `INSERT INTO company (company,username,email,password,logo) VALUES(?,?,?,md5(?),?)`,[company,username,email,password,logo],
+        (err, rows)=> {
+            if (err) {
+                res.send({
+                    status: 400,
+                    message: err
+                })
+            }else{
+                res.status(201)
+                .send({
+                    status: 201,
+                    message: 'Empresa creada con éxito',
+                    data: result
+                })
+            }
+    
+          console.log(pool._freeConnections.indexOf(connection)); // -1
+    
+          connection.release();
+    
+          console.log(pool._freeConnections.indexOf(connection)); // 0
+    
+       });
+    });
+    
+    
 
 })
 
