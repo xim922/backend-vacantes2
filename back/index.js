@@ -143,26 +143,24 @@ app.get('/job/:id',(req,res)=>{
     );
 
 })
-
-app.get('/job/all/:company_id/:page/:limit',(req,res)=>{
+// listar vacantes por compañia
+app.get('/job/all/:company_id/:page/:limit', (req, res)=>{
     const id = req.params.company_id
     const page = req.params.page
     const limit = req.params.limit
-    const start = (page - 1) * limit 
-
+    const start = (page - 1) * limit // Si estoy en la pagina 1 : 2-1 = 1 *10 = 1 es decir índice 1
+    
     db.query(`SELECT  * FROM job WHERE company_id=${id} and deleted=0 order by job_id DESC limit ${start}, ${limit} `,
     (err, result) => {
-        if (result.length >0) {
+        if(result.length >0) {
             res.status(200)
             .send(result)
         }else{
             res.status(400).send({
-                message: 'No existe datos'
+                message: 'No existen datos'
             })
         }
-    }
-    );
-
+    });
 })
 
 app.get('/job/all/:page/:limit',(req,res)=>{
@@ -170,18 +168,18 @@ app.get('/job/all/:page/:limit',(req,res)=>{
     const limit = req.params.limit
     const start = (page - 1) * limit 
 
-    db.query(`SELECT DATEDIFF(J.until_date,(select now())) as dias, J.*,C.company,C.logo FROM job J INNER JOIN company C ON C.company_id = J.company_id where deleted=0 order by job_id DESC limit ${start}, ${limit} `,
-    (err, result) => {
-        if (result.length >0) {
-            res.status(200)
-            .send(result)
-        }else{
+    db.query(
+        `SELECT ABS(DATEDIFF(J.until_date, NOW())) as dias, J.*, C.company, C.logo FROM job J INNER JOIN company C ON C.company_id = J.company_id WHERE deleted = 0 ORDER BY job_id DESC LIMIT ${start}, ${limit}`,
+        (err, result) => {
+          if (result.length > 0) {
+            res.status(200).send(result);
+          } else {
             res.status(400).send({
-                message: 'No existe datos'
-            })
+              message: 'No existen datos',
+            });
+          }
         }
-    }
-    );
+      );
 
 })
 
