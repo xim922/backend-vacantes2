@@ -1,6 +1,5 @@
 [build]
-    base = "vacantes/jupiter-front"
-    publish = "vacantes/jupiter-front/public"
+    publish = "build"
     command = "CI= npm run build"
 
 
