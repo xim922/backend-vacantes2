@@ -1,4 +1,4 @@
 [build]
-  command = npm run build
-  publish = /opt/build/repo/jupiter-front/index.html
+  command = "npm run build"
+  publish = "/opt/build/repo/jupiter-front/index.html"
 
